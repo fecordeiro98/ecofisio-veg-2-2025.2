@@ -1,19 +1,19 @@
-#' Script para a prática de germinação
-#' Ecofisiologia vegetal
-#' Felipe Cordeiro, Felipe Fernandes, Ivone Nascimento, Jaderson Coriolano, Joyce Micaely, Juliana Fonseca, Letícia Gonçalves
-#' Script 1
-#' R 4.5.1
+# Script para a pratica de germinacao
+# Ecofisiologia vegetal
+# Felipe Cordeiro, Felipe Fernandes, Ivone Nascimento, Jaderson Coriolano, Joyce Micaely, Juliana Fonseca, Letícia Gonçalves
+# Script 1
+# R 4.5.1
 
-# Início ------------------------------------------------------------------
+# Inicio ------------------------------------------------------------------
 
-## Bibliotecas ####
+## Bibliotecas ----
 library(ggplot2)
 library(dplyr)
 
-## Importando os dados ####
+## Importando os dados ----
 dados <- read.csv('./dados.csv', header = T, sep = ',')
 
-### Configurando os dados ####
+### Configurando os dados ----
 dados <- dados |> 
   mutate(
     Réplica = factor(Réplica),
@@ -21,21 +21,21 @@ dados <- dados |>
     Tratamento = factor(Tratamento)
   )
 
-#### Conferindo ####
+#### Conferindo ----
 str(dados)
 
-## Separando por semente ####
+## Separando por semente ----
 carolina <- dados |> filter(Semente == 'Carolina')
-mororó <- dados |> filter(Semente == 'Mororó')
+mororo <- dados |> filter(Semente == 'Mororó')
 
-# Gráficos ----------------------------------------------------------------
+# Graficos ----------------------------------------------------------------
 
-gráfico <- function(objeto, cor1, cor2, semente) {
+grafico <- function(objeto, cor_1, cor_2, semente) {
   controle <- objeto |> filter(Tratamento == 'Controle')
   escarificada <- objeto |> filter(Tratamento == 'Escarificada')
   data <- data.frame(
     tratamento = c('Controle', 'Escarificação'),
-    média = c(
+    media = c(
       mean(controle$Germinadas),
       mean(escarificada$Germinadas)
     ),
@@ -44,15 +44,15 @@ gráfico <- function(objeto, cor1, cor2, semente) {
       sd(escarificada$Germinadas) / sqrt(length(escarificada$Germinadas))
     )
   )
-  plotar <- ggplot(data, aes(tratamento, média)) +
+  plotar <- ggplot(data, aes(tratamento, media)) +
     geom_col(
-      fill = c(cor1, cor2),
+      fill = c(cor_1, cor_2),
       colour = 'black'
     ) +
     geom_errorbar(
       aes(
-        ymin = média - ep,
-        ymax = média + ep
+        ymin = media - ep,
+        ymax = media + ep
       ),
       width = 0.2,
       colour = 'blue'
@@ -74,15 +74,15 @@ gráfico <- function(objeto, cor1, cor2, semente) {
   )
 }
 
-gráfico(carolina, 'red', 'pink', 'Carolina')
-gráfico(mororó, 'brown', 'beige', 'Mororó')
+grafico(carolina, 'red', 'pink', 'Carolina')
+grafico(mororo, 'brown', 'beige', 'Mororó')
 
-# Análises ----------------------------------------------------------------
+# Analises ----------------------------------------------------------------
 
-## Carolina ####
-aovCarolina <- aov(Germinadas ~ Tratamento, carolina)
-summary(aovCarolina)
+## Carolina ----
+aov_carolina <- aov(Germinadas ~ Tratamento, carolina)
+summary(aov_carolina)
 
-## Mororó ####
-aovMororó <- aov(Germinadas ~ Tratamento, mororó)
-summary(aovMororó)
+## Mororo ----
+aov_mororo <- aov(Germinadas ~ Tratamento, mororo)
+summary(aov_mororo)
